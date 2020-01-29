@@ -10,3 +10,15 @@ while True:
     else:
         print("Please input a number.")
     break
+
+
+number3 = input("Enter 3rd number:")
+number4 = input("Enter 4th number:")
+
+while True:
+    if number3.isdigit() and number4.isdigit():
+        y = int(number3) * int(number4)
+        print("3rd number + 4th number =", y)
+    else:
+        print("Please input a number.")
+    break
