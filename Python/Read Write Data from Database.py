@@ -1,10 +1,10 @@
 import pandas as pd
 import sqlalchemy
 from sqlalchemy.engine.url import URL
-import user_key
+import database_key
 
-carro_wholesale_db_url = URL(**(user_key.carro_wholesale_db))
-jay_test_db_url = URL(**(user_key.jay_test_db))
+carro_wholesale_db_url = URL(**(database_key.carro_wholesale_db))
+jay_test_db_url = URL(**(database_key.jay_test_db))
 
 engine_in = sqlalchemy.create_engine(carro_wholesale_db_url)
 engine_out = sqlalchemy.create_engine(jay_test_db_url)
