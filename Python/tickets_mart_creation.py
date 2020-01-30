@@ -20,3 +20,6 @@ df.to_sql(
     index = False,
     if_exists = 'replace'
 )
+
+print("Data exported into local database.")
+

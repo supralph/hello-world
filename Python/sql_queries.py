@@ -1,9 +1,10 @@
 tickets_mart_sql = '''
     SELECT
-        *
+        id,
+        
     FROM tickets
     WHERE
-        YEAR(created_at) >= 2020;
+        YEAR(created_at) >= 2019;
     '''
 
 abc_auctions = '''
