@@ -1,7 +1,6 @@
 tickets_mart_sql = '''
     SELECT
-        id,
-        
+        *
     FROM tickets
     WHERE
         YEAR(created_at) >= 2019;
