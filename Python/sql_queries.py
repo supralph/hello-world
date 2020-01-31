@@ -6,8 +6,8 @@ tickets_mart_sql = '''
         YEAR(created_at) >= 2019;
     '''
 
-carrsg_auction_inventories = '''
-    SELECT
+inventory_auction_mart_sql = '''
+  SELECT
 	make AS car_make,
 	model AS car_model,
 	submodel AS car_submodel,
@@ -31,26 +31,25 @@ carrsg_auction_inventories = '''
 	ROUND(AVG(TIMESTAMPDIFF(HOUR, a.time_start, a.time_end)), 0) AS auction_duration_hours,
 	COUNT(DISTINCT b.id) AS bid_count,
 	ROUND(AVG(b.amount), 0) AS avg_bid_price,
-	ROUND(AVG(bb.amount), 0) AS highest_bid_price,
-	i.country_id 
-    FROM
+	ROUND(AVG(bb.amount), 0) AS highest_bid_price
+FROM
 	inventories AS i
-    LEFT JOIN
+LEFT JOIN
 	auction_inventory AS ai
 	ON ai.inventory_id = i.id
-    LEFT JOIN
+LEFT JOIN
 	auctions AS a 
 	ON ai.auction_id = a.id
-    LEFT JOIN
+LEFT JOIN
 	bids AS b
 	ON a.id = b.auction_id
-    LEFT JOIN	
+LEFT JOIN	
 	bids AS bb
 	ON a.highest_bid_id = bb.id
-    WHERE
-	i.deleted_at IS NULL AND
-	a.deleted_at IS NULL AND
-	b.id IS NOT NULL
-    GROUP BY
+WHERE
+	i.deleted_at IS NULL 
+	AND a.deleted_at IS NULL 
+	AND b.id IS NOT NULL
+GROUP BY
 	i.id;
 '''
