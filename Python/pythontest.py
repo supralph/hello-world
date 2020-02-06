@@ -32,3 +32,5 @@ while True:
 4. Hack Test
 
 5. Hack complete test
+
+computer abc 123 abc 123
