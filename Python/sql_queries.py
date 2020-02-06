@@ -54,5 +54,4 @@ GROUP BY
 	i.id;
 '''
 
-2. Test double test files
 
