@@ -23,6 +23,7 @@ while True:
         print("Please input a number.")
     break
 
+ staging
 
 
 1. Test to commit to staging branch
@@ -38,3 +39,7 @@ while True:
 chrome 123 abc test
 
 computer abc 123 abc 123
+
+3. Hack test
+
+master
