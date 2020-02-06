@@ -22,3 +22,11 @@ while True:
     else:
         print("Please input a number.")
     break
+
+
+
+from util.postgres import PSQL
+
+pg = PSQL("username", "pass", "host")
+df = pg.get_result("SELECT * FROM xxx")
+pg.create_table_from_query("SELECT * FROM XXX LIMIT 100", dataset="warehouse", table_name="inventory")
