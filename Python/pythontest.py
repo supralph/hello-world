@@ -32,3 +32,13 @@ df = pg.get_result("SELECT * FROM xxx")
 pg.create_table_from_query("SELECT * FROM XXX LIMIT 100", dataset="warehouse", table_name="inventory")
 
 abc test NEW
+
+
+Publisher Subscriber
+
+ticket change state >> publish message to a topic >>
+read message from topic >> stream to table
+
+
+google tag manager >> webhook http post request with json payload
+
