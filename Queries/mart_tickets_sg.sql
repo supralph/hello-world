@@ -59,6 +59,19 @@ DATE(ticket_created_at_local) >= '2020-01-01'
 GROUP BY DATE(ticket_created_at_local)
 ),
 
+    plan AS (
+SELECT
+DATE(ticket_created_at_local) AS date,
+COUNT(DISTINCT CASE WHEN ticket_additional_data_interested_plan = 'daily' THEN ticket_id ELSE NULL END) AS daily_plan_tickets,
+COUNT(DISTINCT CASE WHEN ticket_additional_data_interested_plan = 'roomy' THEN ticket_id ELSE NULL END) AS roomy_plan_tickets,
+COUNT(DISTINCT CASE WHEN ticket_additional_data_interested_plan = 'fancy' THEN ticket_id ELSE NULL END) AS fancy_plan_tickets
+FROM full_tickets
+WHERE
+ticket_country_id = 1 AND
+DATE(ticket_created_at_local) >= '2020-01-01'
+GROUP BY DATE(ticket_created_at_local)
+),
+
     status AS (
 SELECT
 DATE(audit_created_at_local) AS date,
@@ -117,6 +130,7 @@ SELECT *
 FROM funnel
 LEFT JOIN source ON funnel.date = source.date
 LEFT JOIN context ON funnel.date = context.date
+LEFT JOIN plan ON funnel.date = plan.date
 LEFT JOIN status ON funnel.date = status.date
 ORDER BY funnel.date DESC
 ;
