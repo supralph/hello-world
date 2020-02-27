@@ -6,7 +6,8 @@ DATE(ticket_created_at_local) AS date,
 COUNT(DISTINCT ticket_id) AS total_tickets_created,
 COUNT(DISTINCT CASE WHEN ticket_inventory_id >= 1 THEN ticket_id ELSE NULL END) AS tickets_with_inventory,
 COUNT(DISTINCT CASE WHEN auction_id >= 1 THEN ticket_id ELSE NULL END) AS tickets_with_auction,
-COUNT(DISTINCT CASE WHEN bid_id >= 1 THEN ticket_id ELSE NULL END) AS tickets_with_bid
+COUNT(DISTINCT CASE WHEN bid_id >= 1 THEN ticket_id ELSE NULL END) AS tickets_with_bid,
+COUNT(DISTINCT CASE WHEN auction_status_id IN (18,26,27) THEN ticket_id ELSE NULL END) AS sell_ticket_successfull
 FROM full_tickets
 LEFT JOIN base_auction_inventory ON full_tickets.ticket_inventory_id = base_auction_inventory.auction_inventory_inventory_id
 LEFT JOIN full_auctions ON base_auction_inventory.auction_inventory_auction_id = full_auctions.auction_id
@@ -72,6 +73,19 @@ DATE(ticket_created_at_local) >= '2020-01-01'
 GROUP BY DATE(ticket_created_at_local)
 ),
 
+    photo AS (
+SELECT
+DATE(ticket_created_at_local) AS date,
+COUNT(DISTINCT CASE WHEN file_photos_count >= 1 THEN ticket_id ELSE NULL END) AS tickets_with_photos
+FROM staging_tickets_inventories
+LEFT JOIN base_files ON staging_tickets_inventories.ticket_id = base_files.file_model_id
+WHERE
+ticket_country_id = 1 AND
+DATE(ticket_created_at_local) >= '2020-01-01'
+GROUP BY DATE(ticket_created_at_local)
+),
+
+
     status AS (
 SELECT
 DATE(audit_created_at_local) AS date,
@@ -131,6 +145,7 @@ FROM funnel
 LEFT JOIN source ON funnel.date = source.date
 LEFT JOIN context ON funnel.date = context.date
 LEFT JOIN plan ON funnel.date = plan.date
+LEFT JOIN photo ON funnel.date = photo.date
 LEFT JOIN status ON funnel.date = status.date
 ORDER BY funnel.date DESC
 ;
