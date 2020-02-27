@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 WITH
 
     funnel AS (
@@ -18,10 +16,10 @@ FROM
     SELECT
     DATE(ticket_created_at_local) AS date,
     COUNT(DISTINCT ticket_id) AS tickets_created
-    FROM {{ref('full_tickets')}}
+    FROM full_tickets
     WHERE
     ticket_country_id = 1 AND
-    DATE(ticket_created_at_local) >= '2020-01-01'
+    DATE(ticket_created_at_local) >= '2019-01-01'
     GROUP BY DATE(ticket_created_at_local)
     ) tickets
 LEFT JOIN
@@ -30,10 +28,10 @@ LEFT JOIN
     DATE(inventory_created_at_local) AS date,
     COUNT(DISTINCT CASE WHEN inventory_id >= 1 THEN ticket_id ELSE NULL END) AS ticket_inventories_created,
     COUNT(DISTINCT CASE WHEN (DATE(ticket_created_at_local) = DATE(inventory_created_at_local)) THEN ticket_id ELSE NULL END) AS same_day_ticket_inventories_created
-    FROM {{ref('staging_tickets_inventories')}}
+    FROM staging_tickets_inventories
     WHERE
     ticket_country_id = 1 AND
-    DATE(ticket_created_at_local) >= '2020-01-01'
+    DATE(ticket_created_at_local) >= '2019-01-01'
     GROUP BY DATE(inventory_created_at_local)
     ) inventories ON tickets.date = inventories.date
 LEFT JOIN
@@ -45,12 +43,12 @@ LEFT JOIN
     COUNT(DISTINCT CASE WHEN (DATE(ticket_created_at_local) = DATE(auction_start_at_local)) THEN ticket_id ELSE NULL END) AS same_day_ticket_auctions_started,
     COUNT(DISTINCT CASE WHEN auction_status_id IN (18,26,27) THEN ticket_id ELSE NULL END) AS sell_ticket_successful,
     COUNT(DISTINCT CASE WHEN auction_status_id IN (110) THEN ticket_id ELSE NULL END) AS subscription_ticket_successful
-    FROM {{ref('staging_tickets_inventories')}}
-    LEFT JOIN {{ref('base_auction_inventory')}} ON staging_tickets_inventories.inventory_id = base_auction_inventory.auction_inventory_inventory_id
-    LEFT JOIN {{ref('full_auctions')}} ON base_auction_inventory.auction_inventory_auction_id = full_auctions.auction_id
+    FROM staging_tickets_inventories
+    LEFT JOIN base_auction_inventory ON staging_tickets_inventories.inventory_id = base_auction_inventory.auction_inventory_inventory_id
+    LEFT JOIN full_auctions ON base_auction_inventory.auction_inventory_auction_id = full_auctions.auction_id
     WHERE
     ticket_country_id = 1 AND
-    DATE(ticket_created_at_local) >= '2020-01-01'
+    DATE(ticket_created_at_local) >= '2019-01-01'
     GROUP BY DATE(auction_created_at_local)
     ) auctions ON tickets.date = auctions.date
 ORDER BY tickets.date DESC
@@ -65,10 +63,10 @@ COUNT(DISTINCT CASE WHEN ticket_utm_source = 'google' THEN ticket_id ELSE NULL E
 COUNT(DISTINCT CASE WHEN ticket_utm_source IN ('instagram','Instagram') THEN ticket_id ELSE NULL END) AS instagram_source,
 COUNT(DISTINCT CASE WHEN ticket_utm_source = '101_Carro_General' THEN ticket_id ELSE NULL END) AS direct_source,
 COUNT(DISTINCT CASE WHEN ticket_utm_source IS NULL THEN ticket_id ELSE NULL END) AS carro_source
-FROM {{ref('full_tickets')}}
+FROM full_tickets
 WHERE
 ticket_country_id = 1 AND
-DATE(ticket_created_at_local) >= '2020-01-01'
+DATE(ticket_created_at_local) >= '2019-01-01'
 GROUP BY DATE(ticket_created_at_local)
 ),
 
@@ -90,10 +88,10 @@ COUNT(DISTINCT CASE WHEN ticket_context_id IN (11,28) THEN ticket_id ELSE NULL E
 COUNT(DISTINCT CASE WHEN ticket_context_id IN (82) THEN ticket_id ELSE NULL END) AS lto_context,
 COUNT(DISTINCT CASE WHEN ticket_context_id IN (20) THEN ticket_id ELSE NULL END) AS warranty_context,
 COUNT(DISTINCT CASE WHEN ticket_context_id IN (22,23) THEN ticket_id ELSE NULL END) AS workshop_context
-FROM {{ref('full_tickets')}}
+FROM full_tickets
 WHERE
 ticket_country_id = 1 AND
-DATE(ticket_created_at_local) >= '2020-01-01'
+DATE(ticket_created_at_local) >= '2019-01-01'
 GROUP BY DATE(ticket_created_at_local)
 ),
 
@@ -103,10 +101,10 @@ DATE(ticket_created_at_local) AS plan_date,
 COUNT(DISTINCT CASE WHEN ticket_additional_data_interested_plan = 'daily' THEN ticket_id ELSE NULL END) AS daily_plan,
 COUNT(DISTINCT CASE WHEN ticket_additional_data_interested_plan = 'roomy' THEN ticket_id ELSE NULL END) AS roomy_plan,
 COUNT(DISTINCT CASE WHEN ticket_additional_data_interested_plan = 'fancy' THEN ticket_id ELSE NULL END) AS fancy_plan
-FROM {{ref('full_tickets')}}
+FROM full_tickets
 WHERE
 ticket_country_id = 1 AND
-DATE(ticket_created_at_local) >= '2020-01-01'
+DATE(ticket_created_at_local) >= '2019-01-01'
 GROUP BY DATE(ticket_created_at_local)
 ),
 
@@ -114,11 +112,11 @@ GROUP BY DATE(ticket_created_at_local)
 SELECT
 DATE(ticket_created_at_local) AS photo_date,
 COUNT(DISTINCT CASE WHEN file_photos_count >= 1 THEN ticket_id ELSE NULL END) AS tickets_with_photos
-FROM {{ref('staging_tickets_inventories')}}
-LEFT JOIN {{ref('base_files')}} ON staging_tickets_inventories.ticket_id = base_files.file_model_id
+FROM staging_tickets_inventories
+LEFT JOIN base_files ON staging_tickets_inventories.ticket_id = base_files.file_model_id
 WHERE
 ticket_country_id = 1 AND
-DATE(ticket_created_at_local) >= '2020-01-01'
+DATE(ticket_created_at_local) >= '2019-01-01'
 GROUP BY DATE(ticket_created_at_local)
 ),
 
@@ -151,7 +149,7 @@ FROM
     (audits.created_at + INTERVAL '8 hour') AS audit_created_at_local,
     audits.new_status_id
 
-    FROM {{ref('full_tickets')}}
+    FROM full_tickets
     INNER JOIN
         (
         SELECT
@@ -171,7 +169,7 @@ FROM
         ) audits ON full_tickets.ticket_id = audits.auditable_id
     WHERE
     ticket_country_id = 1 AND
-    DATE(ticket_created_at_local) >= '2020-01-01'
+    DATE(ticket_created_at_local) >= '2019-01-01'
     ) AS status
 GROUP BY DATE(audit_created_at_local)
 ),
@@ -203,10 +201,10 @@ COUNT(DISTINCT CASE WHEN ticket_reason_id = 39 THEN ticket_id ELSE NULL END) AS 
 COUNT(DISTINCT CASE WHEN ticket_reason_id = 40 THEN ticket_id ELSE NULL END) AS seller_sold_outside_closed,
 COUNT(DISTINCT CASE WHEN ticket_reason_id = 41 THEN ticket_id ELSE NULL END) AS car_no_stock_closed,
 COUNT(DISTINCT CASE WHEN ticket_reason_id = 42 THEN ticket_id ELSE NULL END) AS archived_closed
-FROM {{ref('full_tickets')}}
+FROM full_tickets
 WHERE
 ticket_country_id = 1 AND
-DATE(ticket_created_at_local) >= '2020-01-01'
+DATE(ticket_created_at_local) >= '2019-01-01'
 GROUP BY DATE(ticket_created_at_local)
 )
 
