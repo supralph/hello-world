@@ -8,7 +8,7 @@ def q1():
     c = (5/9)*(f - 32)
     print('Celcius = ', c)
 
-    print('\n')
+    print()
 q1()
 
 ### Question 2
@@ -25,7 +25,7 @@ def q2():
     print('Sum = ', sum2)
     print('Average = ', avg2)
 
-    print('\n')
+    print()
 q2()
 
 ### Question 3
@@ -42,7 +42,7 @@ def q3():
     print('Sum = ', sum3)
     print('Product = ', prod3)
 
-    print('\n')
+    print()
 q3()
 
 ### Question 4
@@ -57,7 +57,7 @@ def q4():
 
     print('Hour: ', hour, '/ Minute: ', min, '/ Second: ', sec)
 
-    print('\n')
+    print()
 q4()
 
 ### Question 5
@@ -65,5 +65,5 @@ def q5():
     print('Q5.')
 
 
-    print('\n')
+    print()
 q5()
