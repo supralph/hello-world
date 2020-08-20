@@ -49,7 +49,7 @@ q3()
 def q4():
     print('Q4.')
 
-    x4 = int(input('Positive Integer: '))
+    x4 = int(input('Number of Seconds: '))
 
     hour = x4 // 3600
     min = (x4 - (hour * 3600)) // 60
@@ -64,6 +64,63 @@ q4()
 def q5():
     print('Q5.')
 
+    x5 = int(input('Enter Change: '))
+
+    c50 = x5 // 50
+    c10 = (x5 - (c50 * 50)) // 10
+    c5 = (x5 - (c50 * 50) - (c10 * 10)) // 5
+    c1 = (x5 - (c50 * 50) - (c10 * 10) - (c5 * 5))
+
+    print('50 Cents: ', c50)
+    print('10 Cents:', c10)
+    print('5 Cents: ', c5)
+    print('1 cents', c1)
 
     print()
 q5()
+
+### Question 6
+def q6():
+    print('Q6.')
+
+    x6 = int(input('Enter Meal Amount: '))
+
+    off50 = x6 * 0.50
+    service_charge = off50 * 0.10
+    gst = (off50 + service_charge) * 0.07
+    total = off50 + service_charge + gst
+
+    print('Receipt')
+    print('Cost of Meal: ', x6)
+    print('50% discount: ', off50)
+    print('Service Charge: ', service_charge)
+    print('GST: ', gst)
+    print('Total Amount: ', total)
+
+    print()
+q6()
+
+### Question 7
+import math
+def q7():
+    print('Q7. ')
+
+    x7 = int(input('Enter Length of 1st Side of Triangle: '))
+    y7 = int(input('Enter Length of 2nd Side of Triangle: '))
+    z7 = int(input('Enter Length of 3rd Side of Triangle: '))
+
+    small_s = (1 / 2) * (x7 + y7 + z7)
+    big_s = math.sqrt((small_s) * ((small_s - x7) * (small_s - y7) * (small_s - z7)))
+
+    print('The Area of Triangle is: ', big_s)
+
+    print()
+q7()
+
+### Question 8
+def q8():
+    print('Q8. ')
+
+
+    print()
+q8()
